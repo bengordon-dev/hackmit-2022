@@ -4,6 +4,8 @@ import ICalParser from 'ical-js-parser';
 //import IcalExpander from 'ical-expander';
 import {fakeData} from "./data/fakeData.js"
 
+const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
 function App() {
   const useScript = url => {
     useEffect(() => {
@@ -23,7 +25,7 @@ function App() {
   // getDistance('gates dell complex', 'j2 dining');
 
   const [fileString, setFileString] = useState("")
-  const [data, setData] = useState(fakeData)
+  const [data, setData] = useState([[], [], [], [], [], [], []])
   const [selectedFile, setSelectedFile] = useState();
 	const [isFilePicked, setIsFilePicked] = useState(false);
   const [isSelected, setIsSelected] = useState(false)
@@ -74,6 +76,15 @@ function App() {
       
   }
 
+  function handleFakeData() {
+    const newData = [[], [], [], [], [], [], []]
+    for (const event of fakeData) {
+      const weekDay = new Date(event.startDate).getDay()
+      newData[weekDay].push(event)
+    }
+    setData(newData)
+  }
+
   async function getDistance(origin, destination) {
     // var restRequest = gapi.client.request({
     //   'path': 'https://maps.googleapis.com/maps/api/directions/json',
@@ -84,7 +95,7 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      {/*<div>
         <input type="file" name="file" onChange={changeHandler} />
         {isSelected ? (
           <div>
@@ -102,16 +113,23 @@ function App() {
         <div>
           <button onClick={() => handleSubmission()}>Submit</button>
         </div>
-      </div>
+      </div>*/}
       
       
-      {fileString && <button onClick={() => getData()}>calendar</button>}
+      {/*fileString && <button onClick={() => getData()}>calendar</button>*/}
       
-      <div> stuff goes heree
-      {data && data.map((event, i) => <div>
-        {`${event}`}</div>
+      <button onClick={() => handleFakeData()}>Import calendar</button>
+
+      <div style={{display: "flex", flexDirection: "row"}}>
+      {weekDays && weekDays.map((day, i) => 
+        <div style={{width: "20%"}}>
+          <h3>{day}</h3>
+          {data[i] && data[i].map((event, key) => <p>{event.summary}<br/> {new Date(event.startDate).getHours()}:{new Date(event.startDate).getMinutes()} - {new Date(event.endDate).getHours()}:{new Date(event.endDate).getMinutes()} <br/>{event.location}</p>)}
+        </div>
       )}
       </div>
+
+      
     </div>
   );
 }

@@ -78,3 +78,7 @@ button:hover {
 button:active {
   opacity: .9
 }
+
+.graphBar:hover {
+  opacity: .7;
+}

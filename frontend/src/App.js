@@ -124,15 +124,15 @@ function App() {
         {weekDays.map((day, i) => <text y="485" x={`${3 + i*14.28}%`}>{day}</text>)}
         {graphData.list.map((day, i) => <g>
           {day.map((l, j) => <rect 
-            className="graphBar" fill="blue" width="11%" stroke="#009" 
-            strokeWidth={2} y={460 - (l.runSum + l.carbon)/graphData.maxVal*425} 
-            x={`${1.5+ i*14.28}%`} height={l.carbon/graphData.maxVal*425}
+            className="graphBar" fill="#e76482" width="11%" stroke="#900" 
+            strokeWidth={2} y={460 - (l.runSum + l.carbon)/graphData.maxVal*375} 
+            x={`${1.5+ i*14.28}%`} height={l.carbon/graphData.maxVal*375}
             onMouseEnter={() => setHoverBar({day: i, boxIndex: j})}
             onMouseLeave={() => setHoverBar({day: -1, boxIndex: -1})}>
           </rect>)}
         </g>)}
         {hoverBar.day >= 0 && hoverBar.boxIndex >= 0 && <g><rect 
-          x={20} y={30} width={200} fill={"#ccc"} height={50}>
+          x={20} y={30} width={660} fill={"#ccc"} height={50}>
           </rect>
           <text x={20} y={45}>
             From {graphData.list[hoverBar.day][hoverBar.boxIndex].from}

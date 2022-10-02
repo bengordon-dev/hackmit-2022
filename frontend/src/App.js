@@ -55,16 +55,20 @@ function App() {
     setData(newData)
   }
 
-  function getFootprint() {
-    fetch(`http://localhost:3001/driving?origin=${data[0][0].location}&destination=${data[0][1].location}`)
-    .then(res => res.json())
-    .then(res => {
-      console.log(res)
-      console.log(res.data)
-      setFootprint(res);
-    }).catch(err => {
-      console.log(err);
-    })
+  async function getFootprint() {
+    const results = [];
+    let max = 0;
+    for (const day of data) {
+      const result = [];
+      for (let i = 1; i < day.length; i++) {
+        const res = await fetch(`http://localhost:3001/driving?origin=${day[i - 1].location}&destination=${day[i].location}`);
+        const json = await res.json();
+        max = Math.max(max, json);
+        result.push({from: day[i - 1].location, to: day[i].location, carbon: json});
+      }
+      results.push(result);
+    }
+    console.log(results);
   }
 
   return (

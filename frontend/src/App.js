@@ -1,8 +1,7 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ICalParser from "ical-js-parser";
 import { fakeData } from "./data/fakeData.js";
-const origins = ["San Francisco CA"]
 
 
 const weekDays = [
@@ -16,69 +15,15 @@ const weekDays = [
 ];
 
 function App() {
-  /*const useScript = (url) => {
-    useEffect(() => {
-      const script = document.createElement("script");
-
-      script.src = url;
-      script.async = true;
-
-      document.body.appendChild(script);
-      
-      return () => {
-        document.body.removeChild(script);
-      };
-    }, [url]);
-  };*/
-  //useScript("https://apis.google.com/js/api.js");
-
-  /*useEffect(() => {
-    distance.matrix(origins, destinations, function (err, distances) {
-      if (!err) {
-        console.log(distances)
-      }
-    })
-  }, [])*/
-
-
-  const [fileString, setFileString] = useState("");
   const [data, setData] = useState([[], [], [], [], [], [], []]);
-  const [selectedFile, setSelectedFile] = useState();
-  const [isFilePicked, setIsFilePicked] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
-
-  const changeHandler = (event) => {
-    setSelectedFile(event.target.files[0]);
-    setIsSelected(true);
-  };
-
-  const handleSubmission = () => {
-    const fileReader = new FileReader();
-    fileReader.onload = function (fileLoadedEvent) {
-      let textFromFileLoaded = fileLoadedEvent.target.result;
-      setFileString(textFromFileLoaded);
-    };
-    fileReader.readAsText(selectedFile);
-  };
-
-  function getData() {
-    if (fileString) {
-      const resultJSON = ICalParser.toJSON(fileString);
-      //const icalExpander = new IcalExpander({ fileString, maxIterations: 100 })
-      console.log(resultJSON.events);
-      const ev = resultJSON.events;
-      for (const event of ev) {
-        console.log(new Date(event.dtstart.toJSDate()));
-      }
-      setData(resultJSON.events);
-      console.log(data.slice(-2));
-    }
-  }
+  const [homeAddressInput, setHomeAddressInput] = useState("")
+  const [homeAddress, setHomeAddress] = useState("")
 
   function handleFakeData() {
     const newData = [[], [], [], [], [], [], []];
     for (const event of fakeData) {
       const weekDay = new Date(event.startDate).getDay();
+      event.selected = false
       newData[weekDay].push(event);
     }
     for (let i = 0; i < 7; i++) {
@@ -95,18 +40,36 @@ function App() {
     // console.log(restRequest);
   }
 
+  function select(weekDay, i) {
+    let newDay = data[weekDay]
+    newDay[i].selected = !newDay[i].selected
+    setData([...data.slice(0, weekDay), newDay, ...data.slice(weekDay + 1)])
+  }
+
+  function filterSelected() {
+    let newData = [...data]
+    for (let i = 0; i < newData.length; i++) {
+      newData[i] = newData[i].filter((e) => e.selected)
+    }
+    setData(newData)
+  }
+
   return (
     <div className="App">
-      <button onClick={() => handleFakeData()}>Import calendar</button>
-
+      <div style={{marginTop: "1em"}}>
+        <button style={{marginRight: "0.5em"}} onClick={() => handleFakeData()}>Import calendar</button>
+        <button style={{marginLeft: "0.5em"}} onClick={() => filterSelected()}>Filter Unselected Events</button>
+      </div>
       <div style={{ display: "flex", flexDirection: "row" }}>
         {weekDays &&
           weekDays.map((day, i) => (
-            <div style={{ width: "20%" }}>
+            <div style={{ width: "20%", paddingLeft: 5, paddingRight: 5 }}>
               <h3>{day}</h3>
               {data[i] &&
                 data[i].map((event, key) => (
-                  <p>
+                  <p className={`eventButton ${event.selected ? "selected" : "notSelected"}`}
+                     onClick={() => select(i, key)}
+                  >
                     {event.summary}
                     <br />
                     {new Date(event.startDate).toTimeString().substring(0, 5)}-
@@ -118,6 +81,13 @@ function App() {
             </div>
           ))}
       </div>
+      <hr/>
+
+      <div style={{marginTop: "1em"}}>
+        <input style={{marginRight: "0.5em"}} value={homeAddressInput} onChange={(e) => setHomeAddressInput(e.target.value)}/>
+        <button style={{marginLeft: "0.5em"}} onClick={() => {setHomeAddress(homeAddressInput); setHomeAddressInput("")}}>Submit Home Address</button>
+      </div>
+      <h3>{homeAddress && `Home Address: ${homeAddress}`}</h3>
     </div>
   );
 }

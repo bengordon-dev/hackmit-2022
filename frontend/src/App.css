@@ -36,3 +36,45 @@
     transform: rotate(360deg);
   }
 }
+
+.eventButton {
+  padding: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+
+}
+
+.selected {
+  background-color: #fcc;
+}
+
+.notSelected {
+  background-color: #ddd;
+}
+
+.eventButton:hover {
+  opacity: .7;
+}
+
+.eventButton:active {
+  opacity: .9;
+}
+
+button {
+  background-color: #e76482;
+	color: white;
+	border: none;
+	padding: 5px 10px;
+  border-radius: 15px/50%;
+	font: inherit;
+	outline: inherit;
+  cursor: pointer
+}
+
+button:hover {
+  opacity: .7
+}
+
+button:active {
+  opacity: .9
+}

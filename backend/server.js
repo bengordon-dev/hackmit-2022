@@ -6,8 +6,8 @@ const cors = require("cors")
 
 app.use(cors());
 
-const GOOGLE_KEY = "no shot";
-const CARBON_KEY = "ur lost";
+const GOOGLE_KEY = "AIzaSyB-pdIZw7wXo118cJMwC91W1DS82AoxLvk";
+const CARBON_KEY = "vZ7xY9ttmIpgMj4eIx0w";
 
 app.get("/driving", (req, res) => {
   axios({

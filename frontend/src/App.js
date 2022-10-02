@@ -2,6 +2,8 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import ICalParser from "ical-js-parser";
 import { fakeData } from "./data/fakeData.js";
+const origins = ["San Francisco CA"]
+
 
 const weekDays = [
   "Sunday",
@@ -14,7 +16,7 @@ const weekDays = [
 ];
 
 function App() {
-  const useScript = (url) => {
+  /*const useScript = (url) => {
     useEffect(() => {
       const script = document.createElement("script");
 
@@ -22,13 +24,22 @@ function App() {
       script.async = true;
 
       document.body.appendChild(script);
-
+      
       return () => {
         document.body.removeChild(script);
       };
     }, [url]);
-  };
-  useScript("https://apis.google.com/js/api.js");
+  };*/
+  //useScript("https://apis.google.com/js/api.js");
+
+  /*useEffect(() => {
+    distance.matrix(origins, destinations, function (err, distances) {
+      if (!err) {
+        console.log(distances)
+      }
+    })
+  }, [])*/
+
 
   const [fileString, setFileString] = useState("");
   const [data, setData] = useState([[], [], [], [], [], [], []]);
@@ -69,6 +80,9 @@ function App() {
     for (const event of fakeData) {
       const weekDay = new Date(event.startDate).getDay();
       newData[weekDay].push(event);
+    }
+    for (let i = 0; i < 7; i++) {
+      newData[i].sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
     }
     setData(newData);
   }

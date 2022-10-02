@@ -19,6 +19,9 @@ function App() {
   const [homeAddressInput, setHomeAddressInput] = useState("")
   const [homeAddress, setHomeAddress] = useState("")
   const [footprint, setFootprint] = useState(0)
+  const [graphData, setGraphData] = useState({maxVal: 2.4, list: [
+    [{from: "home", to: "store", carbon: 2.4}], [], [], [], [], [], []]
+  })
 
   function handleFakeData() {
     const newData = [[], [], [], [], [], [], []];
@@ -108,6 +111,15 @@ function App() {
 
       <button onClick={() => getFootprint()}>Get carbon footprint</button>
       <h3>Carbon Footprint: {footprint} kg</h3>
+      {graphData.maxVal > 0 && <svg version="1.1" height="500" width="700" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="100%" height="100%" style={{fill: "#ddd"}}></rect>
+        <text x="50%" y="20" dominantBaseline="middle" style={{fontSize: 20, fontWeight: "bold"}} textAnchor="middle">Emissions by day</text>
+        {weekDays.map((day, i) => <text y="485" x={`${3 + i*14.28}%`}>{day}</text>)}
+        {graphData.list.map((day, i) => <g>
+          {day.map((l, j) => <rect fill="blue" width="11%" y="35" x={`${1.5+ i*14.28}%`} height={l.carbon/graphData.maxVal*425}></rect>)}
+        </g>)}{/*<rect fill="red" opacity=".5" y="35" x={`${1.5+ i*14.28}%`} height="425" width={`11%`}>*/}
+
+      </svg>}
     </div>
   );
 }

@@ -18,6 +18,7 @@ function App() {
   const [data, setData] = useState([[], [], [], [], [], [], []]);
   const [homeAddressInput, setHomeAddressInput] = useState("")
   const [homeAddress, setHomeAddress] = useState("")
+  const [footprint, setFootprint] = useState(0)
 
   function handleFakeData() {
     const newData = [[], [], [], [], [], [], []];
@@ -54,6 +55,18 @@ function App() {
     setData(newData)
   }
 
+  function getFootprint() {
+    fetch(`http://localhost:3001/driving?origin=${data[0][0].location}&destination=${data[0][1].location}`)
+    .then(res => res.json())
+    .then(res => {
+      console.log(res)
+      console.log(res.data)
+      setFootprint(res);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
   return (
     <div className="App">
       <div style={{marginTop: "1em"}}>
@@ -88,6 +101,9 @@ function App() {
         <button style={{marginLeft: "0.5em"}} onClick={() => {setHomeAddress(homeAddressInput); setHomeAddressInput("")}}>Submit Home Address</button>
       </div>
       <h3>{homeAddress && `Home Address: ${homeAddress}`}</h3>
+
+      <button onClick={() => getFootprint()}>Get carbon footprint</button>
+      <h3>Carbon Footprint: {footprint} kg</h3>
     </div>
   );
 }

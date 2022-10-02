@@ -2,9 +2,12 @@ const axios = require("axios");
 const express = require("express");
 const app = express();
 const port = 3001;
+const cors = require("cors")
 
-const GOOGLE_KEY = "AIzaSyB-pdIZw7wXo118cJMwC91W1DS82AoxLvk";
-const CARBON_KEY = "vZ7xY9ttmIpgMj4eIx0w";
+app.use(cors());
+
+const GOOGLE_KEY = "no shot";
+const CARBON_KEY = "ur lost";
 
 app.get("/driving", (req, res) => {
   axios({
